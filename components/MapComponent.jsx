@@ -1,13 +1,18 @@
 import React from 'react';
-import MapView, { Marker } from 'react-native-maps';
-import { StyleSheet, View } from 'react-native';
+import MapView, { Marker, Callout } from 'react-native-maps';
+import { StyleSheet, View, Linking, Text } from 'react-native';
 
-export default function MapComponent() {
+export default function MapComponent({ pointsOfInterest }) {
+  console.log(pointsOfInterest);
   const initialRegion = {
-    latitude: 37.78825,  // Latitud inicial (ej: San Francisco)
-    longitude: -122.4324,  // Longitud inicial
+    latitude:  -34.9206722,  // Latitud inicial (Plaza Moreno)
+    longitude: -57.9561499,  // Longitud inicial
     latitudeDelta: 0.0922,  // Zoom del mapa
     longitudeDelta: 0.0421,
+  };
+
+  const handleLink = (url) => {
+    Linking.openURL(url);
   };
 
   return (
@@ -17,12 +22,23 @@ export default function MapComponent() {
         initialRegion={initialRegion}  // Región inicial del mapa
         showsUserLocation={true}  // Muestra la ubicación del usuario (si se otorgan permisos)
       >
-        {/* Ejemplo de marcador en el mapa */}
-        <Marker
-          coordinate={{ latitude: 37.78825, longitude: -122.4324 }}
-          title="Ubicación Ejemplo"
-          description="Este es un marcador de ejemplo"
-        />
+        {/* Marcadores y Callouts */}
+        {pointsOfInterest.map((point) => (
+          <Marker
+            key={point.id}
+            coordinate={{ latitude: point.latitude, longitude: point.longitude }}
+            title={point.title}
+            description={point.description}
+          >
+            <Callout onPress={() => handleLink(point.url)}>
+              <View>
+                <Text>{point.title}</Text>
+                <Text>{point.description}</Text>
+                <Text style={{ color: 'blue' }}>Ver más</Text>
+              </View>
+            </Callout>
+          </Marker>
+        ))}
       </MapView>
     </View>
   );
