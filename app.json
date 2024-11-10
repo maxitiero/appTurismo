@@ -16,10 +16,12 @@
       "supportsTablet": true
     },
     "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      }
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyDyWsZSt4H4J6PH2AFNhr9mp6tFqzNu8cI"
+        }
+      },
+      "permissions": ["ACCESS_FINE_LOCATION"]
     },
     "web": {
       "bundler": "metro",
