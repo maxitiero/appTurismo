@@ -1,6 +1,6 @@
 import React from "react";
 import MapView, { Marker, Callout } from "react-native-maps";
-import { StyleSheet, View, Linking, Text } from "react-native";
+import { StyleSheet, View, Linking, Text, Image } from "react-native";
 
 export default function MapComponent({ pointsOfInterest }) {
     console.log(pointsOfInterest);
@@ -30,9 +30,12 @@ export default function MapComponent({ pointsOfInterest }) {
                             latitude: point.latitude,
                             longitude: point.longitude,
                         }}
-                        title={point.title}
-                        description={point.description}
                     >
+                        {/* Si quieres mostrar una imagen como ícono del marcador, usa `image` */}
+                        <Image
+                            source={{ uri: point.image }}
+                            style={styles.markerImage}
+                        />
                         <Callout onPress={() => handleLink(point.url)}>
                             <View>
                                 <Text>{point.title}</Text>
@@ -54,5 +57,10 @@ const styles = StyleSheet.create({
     map: {
         width: "100%",
         height: "100%",
+    },
+    markerImage: {
+        width: 50, // Ajusta el tamaño de la imagen del marcador
+        height: 50,
+        borderRadius: 25, // Si quieres que sea circular
     },
 });

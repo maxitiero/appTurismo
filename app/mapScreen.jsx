@@ -12,6 +12,7 @@ export default function MapScreen() {
             description:
                 "Sede central de la Iglesia católica en la ciudad. Desde aquí se coordinan las actividades religiosas y sociales de la arquidiócesis platense.",
             url: "https://arzolap.org.ar/",
+            image: "https://lh3.googleusercontent.com/p/AF1QipOyw43t4l5rDCHV0Zsa09FIvCmTmyoNAZD20GIG=s680-w680-h510",
         },
         {
             id: 2,
