@@ -13,8 +13,8 @@ export default function Index() {
         alignItems: "center",
       }}
     >
-      <Text>Pantalla Principal</Text>
-      <Button title="Ir a Map Component" onPress={() => router.push('/mapScreen')} />
+      <Text>Bienvenid@, comience su Tour!</Text>
+      <Button title="Comenzar" onPress={() => router.push('/mapScreen')} />
     </View>
   );
 }
