@@ -1,6 +1,7 @@
-import React from "react";
+import React, {useEffect} from "react";
 import { View, StyleSheet } from "react-native";
 import MapComponent from "../components/MapComponent";
+import * as Speech from 'expo-speech'; 
 
 export default function MapScreen() {
     const pointsOfInterest = [
@@ -220,7 +221,7 @@ export default function MapScreen() {
 
     return (
         <View style={styles.container}>
-            <MapComponent pointsOfInterest={pointsOfInterest} />
+            <MapComponent pointsOfInterest={pointsOfInterest}/>
         </View>
     );
 }
