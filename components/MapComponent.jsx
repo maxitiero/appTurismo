@@ -1,8 +1,9 @@
 import React from "react";
 import MapView, { Marker, Callout, Polyline, Polygon } from "react-native-maps";
-import { StyleSheet, View, Linking, Text, Image, Button, TouchableOpacity } from "react-native";
+import { StyleSheet, View, Linking, Text, Image, Button, TouchableOpacity,  TouchableWithoutFeedback  } from "react-native";
 import MapViewDirections from 'react-native-maps-directions';
 import Constants from 'expo-constants';
+import * as Speech from 'expo-speech';
 
 export default function MapComponent({ pointsOfInterest }) {
   const initialRegion = {
@@ -35,6 +36,11 @@ export default function MapComponent({ pointsOfInterest }) {
       console.error("Error al abrir el enlace:", error);
     }
   };
+
+  {/*const speakDescription = (description) => {
+    Speech.speak(description); 
+  };*/}
+
   const googleApiKey = Constants.expoConfig.extra.googleApiKey;
 
   // Define los puntos intermedios manualmente
@@ -140,6 +146,11 @@ export default function MapComponent({ pointsOfInterest }) {
     },
   ];
 
+    // Función para leer la descripción usando Text-to-Speech
+    const speakDescription = (description) => {
+      Speech.speak(description, { language: "es", pitch: 1.2, rate: 1.85 });
+    };
+
   return (
     <View style={styles.container}>
       <MapView
@@ -170,7 +181,12 @@ export default function MapComponent({ pointsOfInterest }) {
                 style={styles.markerImage}
               />
             ) : null}
-            <Callout onPress={() => handleLink(point.url)}>
+            <Callout onPress={() => {
+              speakDescription(point.description); // Leer la descripción por voz
+              setTimeout(() => {
+                handleLink(point.url);
+              }, 4000); // abre la url despues de 4 segundos
+              }}>
               <View style={styles.calloutContainer}>
                 <Text style={styles.titleText}>
                   {point.title}
@@ -178,7 +194,14 @@ export default function MapComponent({ pointsOfInterest }) {
                 <Text style={styles.descriptionText}>
                   {point.description}
                 </Text>
-                <Text style={styles.buttonText}>Ver más</Text>
+                {/* boton para leer la descripción*/}
+                <TouchableWithoutFeedback onPress={() => speakDescription(point.description)}>
+                  <Text style={styles.buttonText}>Leer Descripción</Text>
+                </TouchableWithoutFeedback>
+                {/* boton para ver mas información */}
+                <TouchableOpacity onPress={() => handleLink(point.url)}>
+                  <Text style={styles.buttonText}>Ver más</Text>
+                </TouchableOpacity>
               </View>
             </Callout>
           </Marker>
@@ -233,5 +256,6 @@ const styles = StyleSheet.create({
   buttonText: {
     color: "blue",
     fontSize: 14,
+
   },
 });
