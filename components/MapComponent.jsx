@@ -193,13 +193,6 @@ export default function MapComponent({ pointsOfInterest }) {
                 style={styles.markerImage}
               />
             ) : null}
-<<<<<<< HEAD
-            <Callout onPress={() => handleLink(point.url)}>
-              <View>
-                <Text>{point.title}</Text>
-                <Text>{point.description}</Text>
-                <Text style={{ color: "blue" }}>Ver más</Text>
-=======
             <Callout onPress={() => {
               speakDescription(point.description); // Leer la descripción por voz
               setTimeout(() => {
@@ -221,7 +214,6 @@ export default function MapComponent({ pointsOfInterest }) {
                 <TouchableOpacity onPress={() => handleLink(point.url)}>
                   <Text style={styles.buttonText}>Ver más</Text>
                 </TouchableOpacity>
->>>>>>> f7e3d4f (Leer Descripcion por voz)
               </View>
             </Callout>
           </Marker>
