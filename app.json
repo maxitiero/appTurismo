@@ -1,41 +1,39 @@
 {
-  "expo": {
-    "name": "appTurismo",
-    "slug": "appTurismo",
-    "version": "1.0.0",
-    "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
-    "scheme": "myapp",
-    "userInterfaceStyle": "automatic",
-    "splash": {
-      "image": "./assets/images/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
-    "ios": {
-      "supportsTablet": true
-    },
-    "android": {
-      "config": {
-        "googleMaps": {
-          "apiKey": "AIzaSyDyWsZSt4H4J6PH2AFNhr9mp6tFqzNu8cI"
+    "expo": {
+        "name": "appTurismo",
+        "slug": "appTurismo",
+        "version": "1.0.0",
+        "orientation": "portrait",
+        "icon": "./assets/images/icon.png",
+        "scheme": "myapp",
+        "userInterfaceStyle": "automatic",
+        "splash": {
+            "image": "./assets/images/splash.png",
+            "resizeMode": "contain",
+            "backgroundColor": "#ffffff"
+        },
+        "ios": {
+            "supportsTablet": true
+        },
+        "android": {
+            "config": {
+                "googleMaps": {
+                    "apiKey": "AIzaSyDyWsZSt4H4J6PH2AFNhr9mp6tFqzNu8cI"
+                }
+            },
+            "permissions": ["ACCESS_FINE_LOCATION", "ACCESS_COARSE_LOCATION"]
+        },
+        "web": {
+            "bundler": "metro",
+            "output": "static",
+            "favicon": "./assets/images/favicon.png"
+        },
+        "plugins": ["expo-router"],
+        "experiments": {
+            "typedRoutes": true
+        },
+        "extra": {
+            "googleApiKey": "AIzaSyDyWsZSt4H4J6PH2AFNhr9mp6tFqzNu8cI"
         }
-      },
-      "permissions": ["ACCESS_FINE_LOCATION"]
-    },
-    "web": {
-      "bundler": "metro",
-      "output": "static",
-      "favicon": "./assets/images/favicon.png"
-    },
-    "plugins": [
-      "expo-router"
-    ],
-    "experiments": {
-      "typedRoutes": true
-    },
-    "extra": {
-      "googleApiKey": "AIzaSyDyWsZSt4H4J6PH2AFNhr9mp6tFqzNu8cI"
     }
-  }
 }
