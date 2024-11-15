@@ -148,7 +148,7 @@ export default function MapComponent({ pointsOfInterest }) {
 
     // Función para leer la descripción usando Text-to-Speech
     const speakDescription = (description) => {
-      Speech.speak(description, { language: "es", pitch: 1.2, rate: 1.85 });
+      Speech.speak(description, { language: "es", pitch: 1, rate: 1.85 });
     };
 
   return (
@@ -158,26 +158,13 @@ export default function MapComponent({ pointsOfInterest }) {
         initialRegion={initialRegion} // Región inicial del mapa
         showsUserLocation={true} // Muestra la ubicación del usuario (si se otorgan permisos)
       >
-        {/* Trazar ruta entre puntos */}
-        {pointsOfInterest.length > 1 && (
-          <MapViewDirections
-            origin={{
-              latitude: pointsOfInterest[0].latitude,
-              longitude: pointsOfInterest[0].longitude,
-            }}
-            destination={{
-              latitude: pointsOfInterest[pointsOfInterest.length - 1].latitude,
-              longitude: pointsOfInterest[pointsOfInterest.length - 1].longitude,
-            }}
-            waypoints={pointsOfInterest.slice(1, -1).map(point => ({
-              latitude: point.latitude,
-              longitude: point.longitude,
-            }))}
-            apikey={googleApiKey} // Acceso a la API key desde app.json
-            strokeWidth={4}
-            strokeColor="blue"
-          />
-        )}
+        {/* Dibujar polilínea personalizada */}
+        <Polyline
+          coordinates={customWaypoints}
+          strokeColor="green" // Color de la línea
+          strokeWidth={6} // Ancho de la línea
+        />
+        
         {/* Marcadores y Callouts */}
         {pointsOfInterest.map((point) => (
           <Marker
