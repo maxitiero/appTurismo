@@ -1,6 +1,17 @@
 import React, { useState, useEffect } from "react";
-import MapView, { Marker, Callout, Polyline, Polygon } from "react-native-maps";
-import { StyleSheet, View, Linking, Text, Image, ActivityIndicator, TouchableOpacity, TouchableWithoutFeedback, Alert, Button } from "react-native";
+import MapView, { Marker, Callout, Polyline } from "react-native-maps";
+import {
+    StyleSheet,
+    View,
+    Linking,
+    Text,
+    Image,
+    ActivityIndicator,
+    TouchableOpacity,
+    TouchableWithoutFeedback,
+    Alert,
+    Button,
+} from "react-native";
 import * as Location from "expo-location";
 import Constants from "expo-constants";
 import * as Speech from "expo-speech";
@@ -18,9 +29,8 @@ export default function MapComponent({ pointsOfInterest }) {
     const [errorMsg, setErrorMsg] = useState("");
     const [isLoading, setIsLoading] = useState(true);
     const [destination, setDestination] = useState(null);
-    const [travelMode, setTravelMode] = useState("driving"); // Estado para el modo de transporte
+    const [travelMode, setTravelMode] = useState("driving");
     const [showModeButtons, setShowModeButtons] = useState(false);
-
 
     useEffect(() => {
         const getLocation = async () => {
@@ -28,7 +38,7 @@ export default function MapComponent({ pointsOfInterest }) {
                 const { status } =
                     await Location.requestForegroundPermissionsAsync();
                 if (status !== "granted") {
-                    setErrorMsg("Permiso de ubicacion denegado");
+                    setErrorMsg("Permiso de ubicación denegado");
                     setIsLoading(false);
                     return;
                 }
@@ -47,7 +57,6 @@ export default function MapComponent({ pointsOfInterest }) {
             }
         };
         getLocation();
-
     }, []);
 
     useEffect(() => {
@@ -65,7 +74,7 @@ export default function MapComponent({ pointsOfInterest }) {
                 {
                     text: "Sí",
                     onPress: () => {
-                        setShowModeButtons(true); // Mostrar botones de modo de transporte
+                        setShowModeButtons(true);
                     },
                 },
             ]
@@ -74,12 +83,12 @@ export default function MapComponent({ pointsOfInterest }) {
 
     const handleModeChange = (mode) => {
         setTravelMode(mode);
-        drawRoute(mode); // Redibujar la ruta según el modo de transporte seleccionado
+        drawRoute(mode);
     };
 
     const drawRoute = (mode) => {
         try {
-            const firstPoint = customWaypoints[0]; // Obtén el primer punto
+            const firstPoint = customWaypoints[0];
             setDestination({
                 latitude: firstPoint.latitude,
                 longitude: firstPoint.longitude,
@@ -95,9 +104,7 @@ export default function MapComponent({ pointsOfInterest }) {
             console.log("URL no disponible para este punto.");
             return;
         }
-        console.log("Intentando abrir URL:", url); // Verifica que la URL esté presente
 
-        // Agrega "http://" si la URL no contiene un protocolo
         if (!url.startsWith("http://") && !url.startsWith("https://")) {
             url = "http://" + url;
         }
@@ -117,124 +124,46 @@ export default function MapComponent({ pointsOfInterest }) {
         return (
             <View style={styles.loadingContainer}>
                 <ActivityIndicator size="large" color="#0000ff" />
-                <Text>Cargando Ubicacion...</Text>
+                <Text>Cargando Ubicación...</Text>
             </View>
         );
-    }
-    {
-        /*const speakDescription = (description) => {
-    Speech.speak(description); 
-  };*/
     }
 
     const googleApiKey = Constants.expoConfig.extra.googleApiKey;
 
-    // Define los puntos intermedios manualmente
     const customWaypoints = [
-        {
-            latitude: -34.920995,
-            longitude: -57.956145,
-        },
-        {
-            latitude: -34.921426,
-            longitude: -57.956304,
-        },
-        {
-            latitude: -34.921714,
-            longitude: -57.955817,
-        },
-        {
-            latitude: -34.922078,
-            longitude: -57.955275,
-        },
-        {
-            latitude: -34.92254,
-            longitude: -57.954701,
-        },
-        {
-            latitude: -34.921899,
-            longitude: -57.953967,
-        },
-        {
-            latitude: -34.921344,
-            longitude: -57.954501,
-        },
-
-        {
-            latitude: -34.920647,
-            longitude: -57.953672,
-        },
-        {
-            latitude: -34.920959,
-            longitude: -57.953117,
-        },
-
-        {
-            latitude: -34.920894,
-            longitude: -57.952965,
-        },
-        {
-            latitude: -34.916268,
-            longitude: -57.947846,
-        },
-        {
-            latitude: -34.915443,
-            longitude: -57.947873,
-        },
-
-        {
-            latitude: -34.915369,
-            longitude: -57.94775,
-        },
-        {
-            latitude: -34.915208,
-            longitude: -57.94775,
-        },
-        {
-            latitude: -34.915209,
-            longitude: -57.948003,
-        },
-        {
-            latitude: -34.9144,
-            longitude: -57.949071,
-        },
-        {
-            latitude: -34.914287,
-            longitude: -57.948922,
-        },
-        {
-            latitude: -34.914242,
-            longitude: -57.948819,
-        },
-        {
-            latitude: -34.914211,
-            longitude: -57.948685,
-        },
-
-        {
-            latitude: -34.914209,
-            longitude: -57.948584,
-        },
-
-        {
-            latitude: -34.914223,
-            longitude: -57.948441,
-        },
-
-        {
-            latitude: -34.914259,
-            longitude: -57.948324,
-        },
-
-        {
-            latitude: -34.914339,
-            longitude: -57.948181,
-        },
+        { latitude: -34.920995, longitude: -57.956145 },
+        { latitude: -34.921426, longitude: -57.956304 },
+        { latitude: -34.921714, longitude: -57.955817 },
+        { latitude: -34.922078, longitude: -57.955275 },
+        { latitude: -34.92254, longitude: -57.954701 },
+        { latitude: -34.921899, longitude: -57.953967 },
+        { latitude: -34.921344, longitude: -57.954501 },
+        { latitude: -34.920647, longitude: -57.953672 },
+        { latitude: -34.920959, longitude: -57.953117 },
+        { latitude: -34.920894, longitude: -57.952965 },
+        { latitude: -34.916268, longitude: -57.947846 },
+        { latitude: -34.915443, longitude: -57.947873 },
+        { latitude: -34.915369, longitude: -57.94775 },
+        { latitude: -34.915208, longitude: -57.94775 },
+        { latitude: -34.915209, longitude: -57.948003 },
+        { latitude: -34.9144, longitude: -57.949071 },
+        { latitude: -34.914287, longitude: -57.948922 },
+        { latitude: -34.914242, longitude: -57.948819 },
+        { latitude: -34.914211, longitude: -57.948685 },
+        { latitude: -34.914209, longitude: -57.948584 },
+        { latitude: -34.914223, longitude: -57.948441 },
+        { latitude: -34.914259, longitude: -57.948324 },
+        { latitude: -34.914339, longitude: -57.948181 },
     ];
 
-    // Función para leer la descripción usando Text-to-Speech
-    const speakDescription = (description) => {
-        Speech.speak(description, { language: "es", pitch: 1.2, rate: 1.85 });
+    const handleCalloutPress = (description, url) => {
+        Speech.speak(description, {
+            language: "es",
+            pitch: 1.2,
+            rate: 1.0,
+            onDone: () => handleLink(url), // Abrir el enlace solo después de leer
+        });
     };
 
     return (
@@ -243,6 +172,7 @@ export default function MapComponent({ pointsOfInterest }) {
                 <View style={styles.modeContainer}>
                     <Button
                         title="Caminando"
+                        color="green"
                         onPress={() => handleModeChange("WALKING")}
                     />
                     <Button
@@ -251,37 +181,28 @@ export default function MapComponent({ pointsOfInterest }) {
                     />
                 </View>
             )}
-
             <MapView
                 style={styles.map}
-                initialRegion={
-                    userLocation || {
-                        latitude: -34.9206722,
-                        longitude: -57.9561499,
-                        latitudeDelta: 0.009,
-                        longitudeDelta: 0.009,
-                    }
-                }
+                initialRegion={userLocation || initialRegion}
                 showsUserLocation={true}
             >
-
-                {/* Dibuja la ruta al destino seleccionado */}
                 {destination && (
                     <MapViewDirections
-                        origin={userLocation} // Ubicación actual del usuario
-                        destination={destination} // Destino seleccionado
+                        origin={userLocation}
+                        destination={destination}
                         mode={travelMode}
-                        apikey={googleApiKey} // Tu API Key de Google
+                        apikey={googleApiKey}
                         strokeWidth={5}
-                        strokeColor="blue"
-                        onError={(error) => console.error("Error al trazar la ruta:", error)}
+                        strokeColor="#4285F4"
+                        onError={(error) =>
+                            console.error("Error al trazar la ruta:", error)
+                        }
                     />
                 )}
-
                 <Polyline
                     coordinates={customWaypoints}
-                    strokeColor="green"
-                    strokeWidth={6}
+                    strokeColor="#34A853"
+                    strokeWidth={5}
                 />
                 {pointsOfInterest.map((point) => (
                     <Marker
@@ -299,8 +220,10 @@ export default function MapComponent({ pointsOfInterest }) {
                         ) : null}
                         <Callout
                             onPress={() => {
-                                speakDescription(point.description);
-                                setTimeout(() => handleLink(point.url), 4000);
+                                handleCalloutPress(
+                                    point.description,
+                                    point.url
+                                );
                             }}
                         >
                             <View style={styles.calloutContainer}>
@@ -310,22 +233,6 @@ export default function MapComponent({ pointsOfInterest }) {
                                 <Text style={styles.descriptionText}>
                                     {point.description}
                                 </Text>
-                                <TouchableWithoutFeedback
-                                    onPress={() =>
-                                        speakDescription(point.description)
-                                    }
-                                >
-                                    <Text style={styles.buttonText}>
-                                        Leer Descripción
-                                    </Text>
-                                </TouchableWithoutFeedback>
-                                <TouchableOpacity
-                                    onPress={() => handleLink(point.url)}
-                                >
-                                    <Text style={styles.buttonText}>
-                                        Ver más
-                                    </Text>
-                                </TouchableOpacity>
                             </View>
                         </Callout>
                     </Marker>
