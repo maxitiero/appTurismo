@@ -1,7 +1,7 @@
 import React, {useEffect} from "react";
 import { View, StyleSheet } from "react-native";
 import MapComponent from "../components/MapComponent";
-import Start from "../components/Start";
+
 
 export default function MapScreen() {
     const pointsOfInterest = [

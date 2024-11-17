@@ -1,15 +1,6 @@
 import React, { useState, useEffect } from "react";
-import MapView, { Marker, Callout, Polyline, Polygon, Alert } from "react-native-maps";
-import {
-    StyleSheet,
-    View,
-    Linking,
-    Text,
-    Image,
-    ActivityIndicator,
-    TouchableOpacity,
-    TouchableWithoutFeedback,
-} from "react-native";
+import MapView, { Marker, Callout, Polyline, Polygon } from "react-native-maps";
+import { StyleSheet, View, Linking, Text, Image, ActivityIndicator, TouchableOpacity, TouchableWithoutFeedback, Alert, Button } from "react-native";
 import * as Location from "expo-location";
 import Constants from "expo-constants";
 import * as Speech from "expo-speech";
@@ -28,7 +19,9 @@ export default function MapComponent({ pointsOfInterest }) {
     const [isLoading, setIsLoading] = useState(true);
     const [destination, setDestination] = useState(null);
     const [travelMode, setTravelMode] = useState("driving"); // Estado para el modo de transporte
-    
+    const [showModeButtons, setShowModeButtons] = useState(false);
+
+
     useEffect(() => {
         const getLocation = async () => {
             try {
@@ -54,7 +47,48 @@ export default function MapComponent({ pointsOfInterest }) {
             }
         };
         getLocation();
+
     }, []);
+
+    useEffect(() => {
+        if (userLocation) {
+            mostrarAlerta();
+        }
+    }, [userLocation]);
+
+    const mostrarAlerta = () => {
+        Alert.alert(
+            "¡Inicia el Recorrido!",
+            "¿Desea dirigirse al punto de partida?",
+            [
+                { text: "No", style: "cancel" },
+                {
+                    text: "Sí",
+                    onPress: () => {
+                        setShowModeButtons(true); // Mostrar botones de modo de transporte
+                    },
+                },
+            ]
+        );
+    };
+
+    const handleModeChange = (mode) => {
+        setTravelMode(mode);
+        drawRoute(mode); // Redibujar la ruta según el modo de transporte seleccionado
+    };
+
+    const drawRoute = (mode) => {
+        try {
+            const firstPoint = customWaypoints[0]; // Obtén el primer punto
+            setDestination({
+                latitude: firstPoint.latitude,
+                longitude: firstPoint.longitude,
+            });
+        } catch (error) {
+            console.error("Error en drawRoute:", error.message);
+            Alert.alert("Error", "No se pudo establecer el destino.");
+        }
+    };
 
     const handleLink = async (url) => {
         if (!url) {
@@ -202,33 +236,22 @@ export default function MapComponent({ pointsOfInterest }) {
     const speakDescription = (description) => {
         Speech.speak(description, { language: "es", pitch: 1.2, rate: 1.85 });
     };
-    const drawRoute = (destination) => {
-        if (!userLocation) {
-            Alert.alert("Ubicación no disponible", "Espera a que se cargue tu ubicación.");
-            return;
-        }
-        setDestination(destination); //Actualiza el destino al seleccionar un punto
-    };
 
-    {/*const mostrarAlerta = () => {
-        Alert.alert(
-            "¡Inicia el Recorrido!",
-            "¿Desea dirigirse al punto de partida?",
-            [
-                { text: "Aún no", style: "cancel" },
-                { text: "Por supuesto", onPress: () => console.log("Aceptado") }
-            ],
-            { cancelable: true } //permite cerrar el alert tocando fuera
-        );
-
-    };
-
-    useEffect(() => {
-        mostrarAlerta();
-    }, []);
-*/}
     return (
         <View style={styles.container}>
+            {showModeButtons && (
+                <View style={styles.modeContainer}>
+                    <Button
+                        title="Caminando"
+                        onPress={() => handleModeChange("WALKING")}
+                    />
+                    <Button
+                        title="Vehículo"
+                        onPress={() => handleModeChange("DRIVING")}
+                    />
+                </View>
+            )}
+
             <MapView
                 style={styles.map}
                 initialRegion={
@@ -241,11 +264,13 @@ export default function MapComponent({ pointsOfInterest }) {
                 }
                 showsUserLocation={true}
             >
+
                 {/* Dibuja la ruta al destino seleccionado */}
                 {destination && (
                     <MapViewDirections
                         origin={userLocation} // Ubicación actual del usuario
                         destination={destination} // Destino seleccionado
+                        mode={travelMode}
                         apikey={googleApiKey} // Tu API Key de Google
                         strokeWidth={5}
                         strokeColor="blue"
@@ -274,7 +299,6 @@ export default function MapComponent({ pointsOfInterest }) {
                         ) : null}
                         <Callout
                             onPress={() => {
-                                drawRoute({ latitude: point.latitude, longitude: point.longitude });
                                 speakDescription(point.description);
                                 setTimeout(() => handleLink(point.url), 4000);
                             }}
@@ -286,9 +310,6 @@ export default function MapComponent({ pointsOfInterest }) {
                                 <Text style={styles.descriptionText}>
                                     {point.description}
                                 </Text>
-                                <TouchableOpacity onPress={() => drawRoute({ latitude: point.latitude, longitude: point.longitude })}>
-                                    <Text style={styles.buttonText}>Ir aquí</Text>
-                                </TouchableOpacity>
                                 <TouchableWithoutFeedback
                                     onPress={() =>
                                         speakDescription(point.description)
@@ -362,7 +383,21 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     buttonText: {
-        color: "blue",
-        fontSize: 14,
+        color: "white",
+        backgroundColor: "#007bff", // Color azul llamativo
+        paddingVertical: 8,
+        paddingHorizontal: 15,
+        borderRadius: 5,
+        textAlign: "center",
+        marginVertical: 5,
+    },
+    modeContainer: {
+        position: "absolute",
+        top: 10,
+        left: 10,
+        zIndex: 1,
+        backgroundColor: "rgba(255, 255, 255, 0.7)", // Fondo translúcido
+        padding: 10,
+        borderRadius: 5,
     },
 });
