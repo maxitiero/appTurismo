@@ -2,6 +2,8 @@ import { View, StyleSheet, ImageBackground, TouchableOpacity } from "react-nativ
 import { useRouter } from 'expo-router';
 import { Text } from 'react-native-paper';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useLayoutEffect } from "react";
+
 
 export default function Index() {
   const router = useRouter();
@@ -13,7 +15,7 @@ export default function Index() {
       }}
       style={styles.background}
     >
-      {/* Agregamos un gradiente para mejorar el contraste del contenido */}
+      {/* Agregué un gradiente para mejorar el contraste */}
       <LinearGradient
         colors={['rgba(0,0,0,0.8)', 'rgba(0,0,0,0.3)', 'transparent']}
         style={styles.gradient}

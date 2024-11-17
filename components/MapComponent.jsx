@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import MapView, { Marker, Callout, Polyline, Polygon } from "react-native-maps";
+import MapView, { Marker, Callout, Polyline, Polygon, Alert } from "react-native-maps";
 import {
     StyleSheet,
     View,
@@ -13,6 +13,7 @@ import {
 import * as Location from "expo-location";
 import Constants from "expo-constants";
 import * as Speech from "expo-speech";
+import MapViewDirections from "react-native-maps-directions";
 
 export default function MapComponent({ pointsOfInterest }) {
     const initialRegion = {
@@ -25,7 +26,9 @@ export default function MapComponent({ pointsOfInterest }) {
     const [userLocation, setUserLocation] = useState(null);
     const [errorMsg, setErrorMsg] = useState("");
     const [isLoading, setIsLoading] = useState(true);
-
+    const [destination, setDestination] = useState(null);
+    const [travelMode, setTravelMode] = useState("driving"); // Estado para el modo de transporte
+    
     useEffect(() => {
         const getLocation = async () => {
             try {
@@ -40,8 +43,8 @@ export default function MapComponent({ pointsOfInterest }) {
                 setUserLocation({
                     latitude: location.coords.latitude,
                     longitude: location.coords.longitude,
-                    latitudeDelta: 0.01,
-                    longitudeDelta: 0.01,
+                    latitudeDelta: 0.009,
+                    longitudeDelta: 0.009,
                 });
             } catch (error) {
                 setErrorMsg("Error al obtener la ubicación.");
@@ -199,7 +202,31 @@ export default function MapComponent({ pointsOfInterest }) {
     const speakDescription = (description) => {
         Speech.speak(description, { language: "es", pitch: 1.2, rate: 1.85 });
     };
+    const drawRoute = (destination) => {
+        if (!userLocation) {
+            Alert.alert("Ubicación no disponible", "Espera a que se cargue tu ubicación.");
+            return;
+        }
+        setDestination(destination); //Actualiza el destino al seleccionar un punto
+    };
 
+    {/*const mostrarAlerta = () => {
+        Alert.alert(
+            "¡Inicia el Recorrido!",
+            "¿Desea dirigirse al punto de partida?",
+            [
+                { text: "Aún no", style: "cancel" },
+                { text: "Por supuesto", onPress: () => console.log("Aceptado") }
+            ],
+            { cancelable: true } //permite cerrar el alert tocando fuera
+        );
+
+    };
+
+    useEffect(() => {
+        mostrarAlerta();
+    }, []);
+*/}
     return (
         <View style={styles.container}>
             <MapView
@@ -214,6 +241,18 @@ export default function MapComponent({ pointsOfInterest }) {
                 }
                 showsUserLocation={true}
             >
+                {/* Dibuja la ruta al destino seleccionado */}
+                {destination && (
+                    <MapViewDirections
+                        origin={userLocation} // Ubicación actual del usuario
+                        destination={destination} // Destino seleccionado
+                        apikey={googleApiKey} // Tu API Key de Google
+                        strokeWidth={5}
+                        strokeColor="blue"
+                        onError={(error) => console.error("Error al trazar la ruta:", error)}
+                    />
+                )}
+
                 <Polyline
                     coordinates={customWaypoints}
                     strokeColor="green"
@@ -235,6 +274,7 @@ export default function MapComponent({ pointsOfInterest }) {
                         ) : null}
                         <Callout
                             onPress={() => {
+                                drawRoute({ latitude: point.latitude, longitude: point.longitude });
                                 speakDescription(point.description);
                                 setTimeout(() => handleLink(point.url), 4000);
                             }}
@@ -246,6 +286,9 @@ export default function MapComponent({ pointsOfInterest }) {
                                 <Text style={styles.descriptionText}>
                                     {point.description}
                                 </Text>
+                                <TouchableOpacity onPress={() => drawRoute({ latitude: point.latitude, longitude: point.longitude })}>
+                                    <Text style={styles.buttonText}>Ir aquí</Text>
+                                </TouchableOpacity>
                                 <TouchableWithoutFeedback
                                     onPress={() =>
                                         speakDescription(point.description)
