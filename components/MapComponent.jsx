@@ -32,6 +32,14 @@ export default function MapComponent({ pointsOfInterest }) {
     const [travelMode, setTravelMode] = useState("driving");
     const [showModeButtons, setShowModeButtons] = useState(false);
 
+    // para no renderizar todo el tiempo las imágenes de los marcadores
+    const MarkerImage = React.memo(({ image }) => (
+        <Image
+            source={{ uri: image }}
+            style={styles.markerImage}
+        />
+    ));
+
     useEffect(() => {
         const getLocation = async () => {
             try {
@@ -160,7 +168,7 @@ export default function MapComponent({ pointsOfInterest }) {
     const handleCalloutPress = (description, url) => {
         Speech.speak(description, {
             language: "es",
-            pitch: 1.2,
+            pitch: 1,
             rate: 1.0,
             onDone: () => handleLink(url), // Abrir el enlace solo después de leer
         });
@@ -212,12 +220,7 @@ export default function MapComponent({ pointsOfInterest }) {
                             longitude: point.longitude,
                         }}
                     >
-                        {point.image ? (
-                            <Image
-                                source={{ uri: point.image }}
-                                style={styles.markerImage}
-                            />
-                        ) : null}
+                        {point.image && <MarkerImage image={point.image} />}
                         <Callout
                             onPress={() => {
                                 handleCalloutPress(
@@ -261,16 +264,16 @@ const styles = StyleSheet.create({
         height: "100%",
     },
     markerImage: {
-        width: 50, // Tamaño del marcador
+        width: 50,              // Tamaño del marcador
         height: 50,
-        borderRadius: 25, // Forma circular
-        borderWidth: 2, // Ancho del borde
-        borderColor: "#ffffff", // Color del borde (blanco en este caso)
-        shadowColor: "#000", // Color de la sombra
+        borderRadius: 25,       // Forma circular
+        borderWidth: 2.5,       // Ancho del borde
+        borderColor: "white", // Color del borde (blanco en este caso)
+        shadowColor: "#000",    // Color de la sombra
         shadowOffset: { width: 0, height: 2 }, // Desplazamiento de la sombra
-        shadowOpacity: 0.3, // Opacidad de la sombra
-        shadowRadius: 5, // Radio de la sombra
-        elevation: 3, // Elevación (para Android)
+        shadowOpacity: 0.3,     // Opacidad de la sombra
+        shadowRadius: 5,        // Radio de la sombra
+        elevation: 3,           // Elevación (para Android)
     },
     calloutContainer: {
         minWidth: 200,
@@ -279,7 +282,8 @@ const styles = StyleSheet.create({
     },
     titleText: {
         fontWeight: "bold",
-        fontSize: 16,
+        fontSize: 18,
+        color: "black",
     },
     descriptionText: {
         fontSize: 14,
@@ -296,7 +300,7 @@ const styles = StyleSheet.create({
     },
     buttonText: {
         color: "white",
-        backgroundColor: "#007bff", // Color azul llamativo
+        backgroundColor: "#007bff",
         paddingVertical: 8,
         paddingHorizontal: 15,
         borderRadius: 5,

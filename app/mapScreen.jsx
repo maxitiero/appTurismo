@@ -220,7 +220,6 @@ export default function MapScreen() {
 
     return (
         <View style={styles.container}>
-            
             <MapComponent pointsOfInterest={pointsOfInterest}/>
         </View>
     );
