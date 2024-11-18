@@ -233,6 +233,11 @@ export default function MapComponent({ pointsOfInterest }) {
                                 <Text style={styles.descriptionText}>
                                     {point.description}
                                 </Text>
+                                <Text style={styles.textSub}>
+                                    Presione aquí para escuchar la descripción y
+                                    ser redirigido a un enlace con más
+                                    información.
+                                </Text>
                             </View>
                         </Callout>
                     </Marker>
@@ -306,5 +311,9 @@ const styles = StyleSheet.create({
         backgroundColor: "rgba(255, 255, 255, 0.7)", // Fondo translúcido
         padding: 10,
         borderRadius: 5,
+    },
+    textSub: {
+        color: "blue",
+        textDecorationLine: "underline",
     },
 });
